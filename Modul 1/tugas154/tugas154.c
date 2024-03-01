@@ -24,10 +24,9 @@
     */
 
 #include <mega328.h>
-#include <avr/io.h>
-#include <avr/interrupt.h>
+#include <io.h>
+#include <interrupt.h>
 #include <delay.h>
-// #include <inttypes.h>
 
 //SET COUNT VALUE FOR 1 HZ
 #define TCNT_HIGH 0x00      // This contains the upper 8 bit
@@ -88,14 +87,12 @@ interrupt [TIM1_OVF] void timer1_ovf_isr(void) {
 }
 
 void main(void) {
-    init_int();
+    init_int(); 
     while (1) {
-        if (state%2==0){
-                delay_ms(250);
-                PORTB = 0b11110000;
-            } else {
-                delay_ms(250);
-                PORTB = 0b00001111;
-            }
+        PORTB = 0b10101010;
+        delay_ms(100);
+        PORTB = 0b01010101;
+        delay_ms(100);
+        
     }
 }

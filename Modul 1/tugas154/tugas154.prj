@@ -8,9 +8,9 @@ C=
 D= 3/ 1/2024
 Files=1
 F1=tugas154.c
-OpenedFiles=1
+OpenedFiles=0
 OF1=tugas154.c
-ActiveTab=1
+ActiveTab=0
 DebugOutputListFilesDirectory=Debug\List
 DebugOutputObjectFilesDirectory=Debug
 DebugOutputExecutableFilesDirectory=Debug\Exe
@@ -128,9 +128,11 @@ DisplayCodeSizeError=1
 UseBootAppXmega=0
 UseUDSC_LGT8F=1
 RebuildAll=0
-LinkageInformationPresent=0
-COFFileTimeStamp=-1
-Build=0
+LinkageInformationPresent=1
+COFFileTimeStamp=1482770742
+Build=1
+GlobalVarAddr=768
+EEPROMVarAddr=0
 [DefinedSymbolsDebug]
 Count=0
 [Compiler]
@@ -241,7 +243,7 @@ UseUDSC_LGT8F=1
 RebuildAll=1
 LinkageInformationPresent=0
 COFFileTimeStamp=-1
-Build=0
+Build=1
 [DefinedSymbols]
 Count=0
 [CompilerAdvanced]
@@ -342,10 +344,11 @@ VerifyProgramming=1
 ProgrammingCounter=0
 RunUserProg=0
 [BookmarksFoldedCode]
-Files=3
+Files=4
 F1=D:\Dimas Data\Tugas-Tugas Dimas\OneDrive - Institut Teknologi Bandung\STEI ITB\Semester 6 (EL)\SIsmik\Praktikum\tugas154\tugas154.c
 F2=C:\cvavreval\inc\stdint.h
 F3=tugas154.c
+F4=..\tugas153\tugas153.c
 [Bookmarks1]
 TimeStamp=1482767674
 Row=0
@@ -364,9 +367,6 @@ BK8=-1
 BK9=-1
 [FoldedCode1]
 Blocks=0
-[HeadersList]
-Files=1
-F1=D:\Dimas Data\Tugas-Tugas Dimas\OneDrive - Institut Teknologi Bandung\STEI ITB\Semester 6 (EL)\SIsmik\Praktikum\tugas154\tugas154.c
 [BuildInfoCompiler]
 L1=Build configuration: Debug
 L2=Chip: ATmega328P
@@ -384,16 +384,16 @@ L13=Enhanced function parameters passing: Mode 2
 L14=Automatic register allocation: Yes
 L15=Smart register allocation: Yes
 L16=
-L17=Build: 0
-L18=974 line(s) compiled
+L17=Build: 1
+L18=3127 line(s) compiled
 L19=No errors
-L20=No warnings
+L20=79 warning(s)
 L21=
 L22=Bit variables size: 0 byte(s)
 L23=
 L24=Data Stack area: 0x100 to 0x2FF
 L25=Data Stack size: 512 byte(s)
-L26=Estimated Data Stack usage: 0 byte(s)
+L26=Estimated Data Stack usage: 3 byte(s)
 L27=
 L28=RAM Global variables size: 0 byte(s)
 L29=
@@ -402,15 +402,30 @@ L31=Hardware Stack size: 1536 byte(s)
 L32=
 L33=Heap size: 0 byte(s)
 L34=
-Lines=34
+Lines=37
+L35=EEPROM usage: 0 byte(s), 0.0% of EEPROM
+L36=Program size: 165 words (330 bytes), 1.0% of FLASH
+L37=11 words (22 bytes), 6.3% reduced by Code Compression
 [BuildInfoAssembler]
-Lines=0
+Lines=12
+L1=AVRASM: AVR macro assembler 2.1.30 (build 592 Nov  7 2008 12:38:17)
+L2=Copyright (C) 1995-2008 ATMEL Corporation
+L3=
+L4=D:\Dimas Data\Tugas-Tugas Dimas\OneDrive - Institut Teknologi Bandung\STEI ITB\Semester 6 (EL)\SIsmik\Praktikum\Modul 1\tugas154\Debug\List\tugas154.asm(1697): No EEPROM data, deleting D:\Dimas Data\Tugas-Tugas Dimas\OneDrive - Institut Teknologi Bandung\STEI ITB\Semester 6 (EL)\SIsmik\Praktikum\Modul 1\tugas154\Debug\Exe\tugas154.eep
+L5=
+L6=ATmega328P memory use summary [bytes]:
+L7=Segment   Begin    End      Code   Data   Used    Size   Use%
+L8=---------------------------------------------------------------
+L9=[.cseg] 0x000000 0x00014a    330      0    330   32768   1.0%
+L10=[.dseg] 0x000100 0x000300      0      0      0    2048   0.0%
+L11=[.eseg] 0x000000 0x000000      0      0      0    1024   0.0%
+L12=
 [Bookmarks2]
 TimeStamp=1233536028
-Row=124
-Column=0
+Row=697
+Column=32
 ScrollPosX=0
-ScrollPosY=100
+ScrollPosY=214
 BK0=-1
 BK1=-1
 BK2=-1
@@ -421,14 +436,12 @@ BK6=-1
 BK7=-1
 BK8=-1
 BK9=-1
-[FoldedCode2]
-Blocks=0
 [Bookmarks3]
-TimeStamp=1482768150
+TimeStamp=1482769739
 Row=0
 Column=0
 ScrollPosX=0
-ScrollPosY=21
+ScrollPosY=0
 BK0=-1
 BK1=-1
 BK2=-1
@@ -439,16 +452,42 @@ BK6=-1
 BK7=-1
 BK8=-1
 BK9=-1
-[Header1]
-Files=3
-F1=C:\cvavreval\inc\mega328.h
-F2=C:\cvavreval\inc\mega328p_bits.h
-F3=C:\cvavreval\inc\delay.h
 [Bookmarks0]
 Row=0
 Column=0
 ScrollPosX=0
 ScrollPosY=0
-TimeStamp=1482768194
+TimeStamp=1482770771
+[HeadersList]
+Files=1
+F1=D:\Dimas Data\Tugas-Tugas Dimas\OneDrive - Institut Teknologi Bandung\STEI ITB\Semester 6 (EL)\SIsmik\Praktikum\Modul 1\tugas154\tugas154.c
+[Header1]
+Files=6
+F1=C:\cvavreval\inc\mega328.h
+F2=C:\cvavreval\inc\mega328p_bits.h
+F3=C:\cvavreval\inc\io.h
+F4=C:\cvavreval\inc\mega328p.h
+F5=C:\cvavreval\inc\interrupt.h
+F6=C:\cvavreval\inc\delay.h
+[Bookmarks4]
+TimeStamp=1482770725
+Row=0
+Column=0
+ScrollPosX=0
+ScrollPosY=70
+BK0=-1
+BK1=-1
+BK2=-1
+BK3=-1
+BK4=-1
+BK5=-1
+BK6=-1
+BK7=-1
+BK8=-1
+BK9=-1
+[FoldedCode4]
+Blocks=0
+[FoldedCode2]
+Blocks=0
 [FoldedCode3]
 Blocks=0

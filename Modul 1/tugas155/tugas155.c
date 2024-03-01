@@ -20,7 +20,7 @@ dan seterusnya...
 
 #include <mega328p.h>
 #include <delay.h>
-#include <avr/interrupt.h>
+#include <interrupt.h>
 
 int state;
 
