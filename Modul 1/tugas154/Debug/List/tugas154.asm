@@ -1,5 +1,5 @@
 
-;CodeVisionAVR C Compiler V4.02 
+;CodeVisionAVR C Compiler V4.02 Evaluation
 ;(C) Copyright 1998-2024 Pavel Haiduc, HP InfoTech S.R.L.
 ;http://www.hpinfotech.ro
 
@@ -1536,93 +1536,74 @@ __CLEAR_SRAM:
 	#endif
 ;	flags -> R17
 ;void init_int(void) {
-; 0000 0026 void init_int(void) {
+; 0000 0027 void init_int(void) {
 
 	.CSEG
-_init_int:
-; .FSTART _init_int
-; 0000 0027 TIMSK1 |= (1<<TOIE1);
-	LDS  R30,111
-	ORI  R30,1
-	STS  111,R30
-; 0000 0028 
-; 0000 0029 // Set timer mode to "Normal"
-; 0000 002A TCCR1A &= (~(1<<WGM10)) & (~(1<<WGM11));
-	LDS  R30,128
-	ANDI R30,LOW(0xFC)
-	STS  128,R30
-; 0000 002B TCCR1B &= (~(1<<WGM12)) & (~(1<<WGM13));
-	LDS  R30,129
-	ANDI R30,LOW(0xE7)
-	RCALL SUBOPT_0x0
-; 0000 002C 
-; 0000 002D // Choosing the prescaller into 1024
-; 0000 002E TCCR1B |= (1<<CS12) | (1<<CS10);
-	ORI  R30,LOW(0x5)
-	RCALL SUBOPT_0x0
-; 0000 002F TCCR1B &= ~(1<<CS11);
-	ANDI R30,0xFD
-	STS  129,R30
-; 0000 0030 TCCR1A |= (1<<COM1A0);
-	LDS  R30,128
-	ORI  R30,0x40
-	STS  128,R30
-; 0000 0031 TCCR1A &= ~(1<<COM1A1);
-	LDS  R30,128
-	ANDI R30,0x7F
-	STS  128,R30
-; 0000 0032 
-; 0000 0033 // Load period to get 1 second clock
-; 0000 0034 // as we choose 16MHz timer, clock freq will be 16M/1024 = 15625 Hz
-; 0000 0035 // then the time for each tick is 1/F = 64us
-; 0000 0036 // number of count to get 1000ms    -> 1000ms/64us = 15625
-; 0000 0037 // we need to substract with the maximum value to get the right timing
-; 0000 0038 // as Timer1 is a 16-bit timer which is 2^16, the maximum value is 65535,
-; 0000 0039 // hence period = 65535-15625 = 49910
-; 0000 003A // Initial timer start value
-; 0000 003B TCNT1H = TCNT_HIGH;      // This one probably needs to be defined as TNCTH and TNCTL
-	RCALL SUBOPT_0x1
-; 0000 003C TCNT1L = TCNT_LOW;
-; 0000 003D 
-; 0000 003E // Timer Period
-; 0000 003F OCR1AH = 0x3D;
-; 0000 0040 OCR1AL = 0x09;
-; 0000 0041 
+; 0000 0028 TIMSK1 |= (1<<TOIE1);
+; 0000 0029 
+; 0000 002A // Set timer mode to "Normal"
+; 0000 002B TCCR1A &= (~(1<<WGM10)) & (~(1<<WGM11));
+; 0000 002C TCCR1B &= (~(1<<WGM12)) & (~(1<<WGM13));
+; 0000 002D 
+; 0000 002E // Choosing the prescaller into 1024
+; 0000 002F TCCR1B |= (1<<CS12) | (1<<CS10);
+; 0000 0030 TCCR1B &= ~(1<<CS11);
+; 0000 0031 TCCR1A |= (1<<COM1A0);
+; 0000 0032 TCCR1A &= ~(1<<COM1A1);
+; 0000 0033 
+; 0000 0034 // Load period to get 1 second clock
+; 0000 0035 // as we choose 16MHz timer, clock freq will be 16M/1024 = 15625 Hz
+; 0000 0036 // then the time for each tick is 1/F = 64us
+; 0000 0037 // number of count to get 1000ms    -> 1000ms/64us = 15625
+; 0000 0038 // we need to substract with the maximum value to get the right timing
+; 0000 0039 // as Timer1 is a 16-bit timer which is 2^16, the maximum value is 65535,
+; 0000 003A // hence period = 65535-15625 = 49910
+; 0000 003B // Initial timer start value
+; 0000 003C TCNT1H = TCNT_HIGH;      // This one probably needs to be defined as TNCTH and TNCTL
+; 0000 003D TCNT1L = TCNT_LOW;
+; 0000 003E 
+; 0000 003F // Timer Period
+; 0000 0040 OCR1AH = 0x3D;
+; 0000 0041 OCR1AL = 0x09;
 ; 0000 0042 
-; 0000 0043 #asm("sei")         // if this doesnt work, we can manually set up the global interrupt enable
-	SEI
-; 0000 0044 
-; 0000 0045 //-------------------------------------------------------------------------------------------------
-; 0000 0046 //set prescaler 1024
-; 0000 0047 // TIMSK1=0b000000;
-; 0000 0048 // TCCR1B=0b0000XXXX;
-; 0000 0049 
-; 0000 004A // TCNT1H=TCNT_HIGH;
-; 0000 004B // TCNT1L=TCNT_LOW;
-; 0000 004C 
-; 0000 004D //Enable Interrupt
-; 0000 004E // #asm("sei")         // if this doesnt work, we can manually set up the global interrupt enable
-; 0000 004F }
-	RET
-; .FEND
+; 0000 0043 
+; 0000 0044 #asm("sei")         // if this doesnt work, we can manually set up the global interrupt enable
+; 0000 0045 
+; 0000 0046 //-------------------------------------------------------------------------------------------------
+; 0000 0047 //set prescaler 1024
+; 0000 0048 // TIMSK1=0b000000;
+; 0000 0049 // TCCR1B=0b0000XXXX;
+; 0000 004A 
+; 0000 004B // TCNT1H=TCNT_HIGH;
+; 0000 004C // TCNT1L=TCNT_LOW;
+; 0000 004D 
+; 0000 004E //Enable Interrupt
+; 0000 004F // #asm("sei")         // if this doesnt work, we can manually set up the global interrupt enable
+; 0000 0050 }
 ;interrupt [14] void timer1_ovf_isr(void) {
-; 0000 0051 interrupt [14] void timer1_ovf_isr(void) {
+; 0000 0052 interrupt [14] void timer1_ovf_isr(void) {
 _timer1_ovf_isr:
 ; .FSTART _timer1_ovf_isr
 	ST   -Y,R30
 	ST   -Y,R31
 	IN   R30,SREG
 	ST   -Y,R30
-; 0000 0052 TCNT1H = TCNT_HIGH;
-	RCALL SUBOPT_0x1
-; 0000 0053 TCNT1L = TCNT_LOW;
-; 0000 0054 OCR1AH = 0x3D;
-; 0000 0055 OCR1AL = 0x09;
-; 0000 0056 state++;
+; 0000 0053 TCNT1H = TCNT_HIGH;
+	LDI  R30,LOW(0)
+	STS  133,R30
+; 0000 0054 TCNT1L = TCNT_LOW;
+	STS  132,R30
+; 0000 0055 OCR1AH = 0x3D;
+	LDI  R30,LOW(61)
+	STS  137,R30
+; 0000 0056 OCR1AL = 0x09;
+	LDI  R30,LOW(9)
+	STS  136,R30
+; 0000 0057 state++;
 	LDI  R30,LOW(1)
 	LDI  R31,HIGH(1)
 	__ADDWRR 3,4,30,31
-; 0000 0057 }
+; 0000 0058 }
 	LD   R30,Y+
 	OUT  SREG,R30
 	LD   R31,Y+
@@ -1630,22 +1611,20 @@ _timer1_ovf_isr:
 	RETI
 ; .FEND
 ;void main(void) {
-; 0000 0059 void main(void) {
+; 0000 005A void main(void) {
 _main:
 ; .FSTART _main
-; 0000 005A init_int();
-	RCALL _init_int
-; 0000 005B while (1) {
+; 0000 005B // init_int();
+; 0000 005C while (1) {
 _0x4:
-; 0000 005C PORTB = 0b10101010;
+; 0000 005D PORTB = 0b10101010;
 	LDI  R30,LOW(170)
-	RCALL SUBOPT_0x2
-; 0000 005D delay_ms(100);
-; 0000 005E PORTB = 0b01010101;
+	RCALL SUBOPT_0x0
+; 0000 005E delay_ms(100);
+; 0000 005F PORTB = 0b01010101;
 	LDI  R30,LOW(85)
-	RCALL SUBOPT_0x2
-; 0000 005F delay_ms(100);
-; 0000 0060 
+	RCALL SUBOPT_0x0
+; 0000 0060 delay_ms(100);
 ; 0000 0061 }
 	RJMP _0x4
 ; 0000 0062 }
@@ -1656,23 +1635,6 @@ _0x7:
 	.CSEG
 ;OPTIMIZER ADDED SUBROUTINE, CALLED 2 TIMES, CODE SIZE REDUCTION:1 WORDS
 SUBOPT_0x0:
-	STS  129,R30
-	LDS  R30,129
-	RET
-
-;OPTIMIZER ADDED SUBROUTINE, CALLED 2 TIMES, CODE SIZE REDUCTION:9 WORDS
-SUBOPT_0x1:
-	LDI  R30,LOW(0)
-	STS  133,R30
-	STS  132,R30
-	LDI  R30,LOW(61)
-	STS  137,R30
-	LDI  R30,LOW(9)
-	STS  136,R30
-	RET
-
-;OPTIMIZER ADDED SUBROUTINE, CALLED 2 TIMES, CODE SIZE REDUCTION:1 WORDS
-SUBOPT_0x2:
 	OUT  0x5,R30
 	LDI  R26,LOW(100)
 	LDI  R27,0

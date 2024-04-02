@@ -1,11 +1,11 @@
 
-AVRASM ver. 2.1.30  D:\Dimas Data\Tugas-Tugas Dimas\OneDrive - Institut Teknologi Bandung\STEI ITB\Semester 6 (EL)\SIsmik\Praktikum\Modul 1\tugas154\Debug\List\tugas154.asm Fri Mar 01 09:09:42 2024
+AVRASM ver. 2.1.30  D:\Dimas Data\Tugas-Tugas Dimas\OneDrive - Institut Teknologi Bandung\STEI ITB\Semester 6 (EL)\Sismik\Praktikum\Modul 1\tugas154\Debug\List\tugas154.asm Fri Mar 01 15:09:54 2024
 
-D:\Dimas Data\Tugas-Tugas Dimas\OneDrive - Institut Teknologi Bandung\STEI ITB\Semester 6 (EL)\SIsmik\Praktikum\Modul 1\tugas154\Debug\List\tugas154.asm(1421): warning: Register r3 already defined by the .DEF directive
-D:\Dimas Data\Tugas-Tugas Dimas\OneDrive - Institut Teknologi Bandung\STEI ITB\Semester 6 (EL)\SIsmik\Praktikum\Modul 1\tugas154\Debug\List\tugas154.asm(1422): warning: Register r4 already defined by the .DEF directive
+D:\Dimas Data\Tugas-Tugas Dimas\OneDrive - Institut Teknologi Bandung\STEI ITB\Semester 6 (EL)\Sismik\Praktikum\Modul 1\tugas154\Debug\List\tugas154.asm(1421): warning: Register r3 already defined by the .DEF directive
+D:\Dimas Data\Tugas-Tugas Dimas\OneDrive - Institut Teknologi Bandung\STEI ITB\Semester 6 (EL)\Sismik\Praktikum\Modul 1\tugas154\Debug\List\tugas154.asm(1422): warning: Register r4 already defined by the .DEF directive
                  
                  
-                 ;CodeVisionAVR C Compiler V4.02 
+                 ;CodeVisionAVR C Compiler V4.02 Evaluation
                  ;(C) Copyright 1998-2024 Pavel Haiduc, HP InfoTech S.R.L.
                  ;http://www.hpinfotech.ro
                  
@@ -1450,7 +1450,7 @@ D:\Dimas Data\Tugas-Tugas Dimas\OneDrive - Institut Teknologi Bandung\STEI ITB\S
 000014 940c 0000 	JMP  0x00
 000016 940c 0000 	JMP  0x00
 000018 940c 0000 	JMP  0x00
-00001a 940c 0071 	JMP  _timer1_ovf_isr
+00001a 940c 0051 	JMP  _timer1_ovf_isr
 00001c 940c 0000 	JMP  0x00
 00001e 940c 0000 	JMP  0x00
 000020 940c 0000 	JMP  0x00
@@ -1509,7 +1509,7 @@ D:\Dimas Data\Tugas-Tugas Dimas\OneDrive - Institut Teknologi Bandung\STEI ITB\S
 00004d e0c0      	LDI  R28,LOW(__SRAM_START+__DSTACK_SIZE)
 00004e e0d3      	LDI  R29,HIGH(__SRAM_START+__DSTACK_SIZE)
                  
-00004f 940c 007f 	JMP  _main
+00004f 940c 0069 	JMP  _main
                  
                  	.ESEG
                  	.ORG 0x00
@@ -1533,170 +1533,132 @@ D:\Dimas Data\Tugas-Tugas Dimas\OneDrive - Institut Teknologi Bandung\STEI ITB\S
                  	#endif
                  ;	flags -> R17
                  ;void init_int(void) {
-                 ; 0000 0026 void init_int(void) {
+                 ; 0000 0027 void init_int(void) {
                  
                  	.CSEG
-                 _init_int:
-                 ; .FSTART _init_int
-                 ; 0000 0027 TIMSK1 |= (1<<TOIE1);
-000051 91e0 006f 	LDS  R30,111
-000053 60e1      	ORI  R30,1
-000054 93e0 006f 	STS  111,R30
-                 ; 0000 0028 
-                 ; 0000 0029 // Set timer mode to "Normal"
-                 ; 0000 002A TCCR1A &= (~(1<<WGM10)) & (~(1<<WGM11));
-000056 91e0 0080 	LDS  R30,128
-000058 7fec      	ANDI R30,LOW(0xFC)
-000059 93e0 0080 	STS  128,R30
-                 ; 0000 002B TCCR1B &= (~(1<<WGM12)) & (~(1<<WGM13));
-00005b 91e0 0081 	LDS  R30,129
-00005d 7ee7      	ANDI R30,LOW(0xE7)
-00005e d027      	RCALL SUBOPT_0x0
-                 ; 0000 002C 
-                 ; 0000 002D // Choosing the prescaller into 1024
-                 ; 0000 002E TCCR1B |= (1<<CS12) | (1<<CS10);
-00005f 60e5      	ORI  R30,LOW(0x5)
-000060 d025      	RCALL SUBOPT_0x0
-                 ; 0000 002F TCCR1B &= ~(1<<CS11);
-000061 7fed      	ANDI R30,0xFD
-000062 93e0 0081 	STS  129,R30
-                 ; 0000 0030 TCCR1A |= (1<<COM1A0);
-000064 91e0 0080 	LDS  R30,128
-000066 64e0      	ORI  R30,0x40
-000067 93e0 0080 	STS  128,R30
-                 ; 0000 0031 TCCR1A &= ~(1<<COM1A1);
-000069 91e0 0080 	LDS  R30,128
-00006b 77ef      	ANDI R30,0x7F
-00006c 93e0 0080 	STS  128,R30
-                 ; 0000 0032 
-                 ; 0000 0033 // Load period to get 1 second clock
-                 ; 0000 0034 // as we choose 16MHz timer, clock freq will be 16M/1024 = 15625 Hz
-                 ; 0000 0035 // then the time for each tick is 1/F = 64us
-                 ; 0000 0036 // number of count to get 1000ms    -> 1000ms/64us = 15625
-                 ; 0000 0037 // we need to substract with the maximum value to get the right timing
-                 ; 0000 0038 // as Timer1 is a 16-bit timer which is 2^16, the maximum value is 65535,
-                 ; 0000 0039 // hence period = 65535-15625 = 49910
-                 ; 0000 003A // Initial timer start value
-                 ; 0000 003B TCNT1H = TCNT_HIGH;      // This one probably needs to be defined as TNCTH and TNCTL
-00006e d01c      	RCALL SUBOPT_0x1
-                 ; 0000 003C TCNT1L = TCNT_LOW;
-                 ; 0000 003D 
-                 ; 0000 003E // Timer Period
-                 ; 0000 003F OCR1AH = 0x3D;
-                 ; 0000 0040 OCR1AL = 0x09;
-                 ; 0000 0041 
+                 ; 0000 0028 TIMSK1 |= (1<<TOIE1);
+                 ; 0000 0029 
+                 ; 0000 002A // Set timer mode to "Normal"
+                 ; 0000 002B TCCR1A &= (~(1<<WGM10)) & (~(1<<WGM11));
+                 ; 0000 002C TCCR1B &= (~(1<<WGM12)) & (~(1<<WGM13));
+                 ; 0000 002D 
+                 ; 0000 002E // Choosing the prescaller into 1024
+                 ; 0000 002F TCCR1B |= (1<<CS12) | (1<<CS10);
+                 ; 0000 0030 TCCR1B &= ~(1<<CS11);
+                 ; 0000 0031 TCCR1A |= (1<<COM1A0);
+                 ; 0000 0032 TCCR1A &= ~(1<<COM1A1);
+                 ; 0000 0033 
+                 ; 0000 0034 // Load period to get 1 second clock
+                 ; 0000 0035 // as we choose 16MHz timer, clock freq will be 16M/1024 = 15625 Hz
+                 ; 0000 0036 // then the time for each tick is 1/F = 64us
+                 ; 0000 0037 // number of count to get 1000ms    -> 1000ms/64us = 15625
+                 ; 0000 0038 // we need to substract with the maximum value to get the right timing
+                 ; 0000 0039 // as Timer1 is a 16-bit timer which is 2^16, the maximum value is 65535,
+                 ; 0000 003A // hence period = 65535-15625 = 49910
+                 ; 0000 003B // Initial timer start value
+                 ; 0000 003C TCNT1H = TCNT_HIGH;      // This one probably needs to be defined as TNCTH and TNCTL
+                 ; 0000 003D TCNT1L = TCNT_LOW;
+                 ; 0000 003E 
+                 ; 0000 003F // Timer Period
+                 ; 0000 0040 OCR1AH = 0x3D;
+                 ; 0000 0041 OCR1AL = 0x09;
                  ; 0000 0042 
-                 ; 0000 0043 #asm("sei")         // if this doesnt work, we can manually set up the global interrupt enable
-00006f 9478      	SEI
-                 ; 0000 0044 
-                 ; 0000 0045 //-------------------------------------------------------------------------------------------------
-                 ; 0000 0046 //set prescaler 1024
-                 ; 0000 0047 // TIMSK1=0b000000;
-                 ; 0000 0048 // TCCR1B=0b0000XXXX;
-                 ; 0000 0049 
-                 ; 0000 004A // TCNT1H=TCNT_HIGH;
-                 ; 0000 004B // TCNT1L=TCNT_LOW;
-                 ; 0000 004C 
-                 ; 0000 004D //Enable Interrupt
-                 ; 0000 004E // #asm("sei")         // if this doesnt work, we can manually set up the global interrupt enable
-                 ; 0000 004F }
-000070 9508      	RET
-                 ; .FEND
+                 ; 0000 0043 
+                 ; 0000 0044 #asm("sei")         // if this doesnt work, we can manually set up the global interrupt enable
+                 ; 0000 0045 
+                 ; 0000 0046 //-------------------------------------------------------------------------------------------------
+                 ; 0000 0047 //set prescaler 1024
+                 ; 0000 0048 // TIMSK1=0b000000;
+                 ; 0000 0049 // TCCR1B=0b0000XXXX;
+                 ; 0000 004A 
+                 ; 0000 004B // TCNT1H=TCNT_HIGH;
+                 ; 0000 004C // TCNT1L=TCNT_LOW;
+                 ; 0000 004D 
+                 ; 0000 004E //Enable Interrupt
+                 ; 0000 004F // #asm("sei")         // if this doesnt work, we can manually set up the global interrupt enable
+                 ; 0000 0050 }
                  ;interrupt [14] void timer1_ovf_isr(void) {
-                 ; 0000 0051 interrupt [14] void timer1_ovf_isr(void) {
+                 ; 0000 0052 interrupt [14] void timer1_ovf_isr(void) {
                  _timer1_ovf_isr:
                  ; .FSTART _timer1_ovf_isr
-000071 93ea      	ST   -Y,R30
-000072 93fa      	ST   -Y,R31
-000073 b7ef      	IN   R30,SREG
-000074 93ea      	ST   -Y,R30
-                 ; 0000 0052 TCNT1H = TCNT_HIGH;
-000075 d015      	RCALL SUBOPT_0x1
-                 ; 0000 0053 TCNT1L = TCNT_LOW;
-                 ; 0000 0054 OCR1AH = 0x3D;
-                 ; 0000 0055 OCR1AL = 0x09;
-                 ; 0000 0056 state++;
-000076 e0e1      	LDI  R30,LOW(1)
-000077 e0f0      	LDI  R31,HIGH(1)
+000051 93ea      	ST   -Y,R30
+000052 93fa      	ST   -Y,R31
+000053 b7ef      	IN   R30,SREG
+000054 93ea      	ST   -Y,R30
+                 ; 0000 0053 TCNT1H = TCNT_HIGH;
+000055 e0e0      	LDI  R30,LOW(0)
+000056 93e0 0085 	STS  133,R30
+                 ; 0000 0054 TCNT1L = TCNT_LOW;
+000058 93e0 0084 	STS  132,R30
+                 ; 0000 0055 OCR1AH = 0x3D;
+00005a e3ed      	LDI  R30,LOW(61)
+00005b 93e0 0089 	STS  137,R30
+                 ; 0000 0056 OCR1AL = 0x09;
+00005d e0e9      	LDI  R30,LOW(9)
+00005e 93e0 0088 	STS  136,R30
+                 ; 0000 0057 state++;
+000060 e0e1      	LDI  R30,LOW(1)
+000061 e0f0      	LDI  R31,HIGH(1)
                 +
-000078 0e3e     +ADD R3 , R30
-000079 1e4f     +ADC R4 , R31
+000062 0e3e     +ADD R3 , R30
+000063 1e4f     +ADC R4 , R31
                  	__ADDWRR 3,4,30,31
-                 ; 0000 0057 }
-00007a 91e9      	LD   R30,Y+
-00007b bfef      	OUT  SREG,R30
-00007c 91f9      	LD   R31,Y+
-00007d 91e9      	LD   R30,Y+
-00007e 9518      	RETI
+                 ; 0000 0058 }
+000064 91e9      	LD   R30,Y+
+000065 bfef      	OUT  SREG,R30
+000066 91f9      	LD   R31,Y+
+000067 91e9      	LD   R30,Y+
+000068 9518      	RETI
                  ; .FEND
                  ;void main(void) {
-                 ; 0000 0059 void main(void) {
+                 ; 0000 005A void main(void) {
                  _main:
                  ; .FSTART _main
-                 ; 0000 005A init_int();
-00007f dfd1      	RCALL _init_int
-                 ; 0000 005B while (1) {
+                 ; 0000 005B // init_int();
+                 ; 0000 005C while (1) {
                  _0x4:
-                 ; 0000 005C PORTB = 0b10101010;
-000080 eaea      	LDI  R30,LOW(170)
-000081 d015      	RCALL SUBOPT_0x2
-                 ; 0000 005D delay_ms(100);
-                 ; 0000 005E PORTB = 0b01010101;
-000082 e5e5      	LDI  R30,LOW(85)
-000083 d013      	RCALL SUBOPT_0x2
-                 ; 0000 005F delay_ms(100);
-                 ; 0000 0060 
+                 ; 0000 005D PORTB = 0b10101010;
+000069 eaea      	LDI  R30,LOW(170)
+00006a d004      	RCALL SUBOPT_0x0
+                 ; 0000 005E delay_ms(100);
+                 ; 0000 005F PORTB = 0b01010101;
+00006b e5e5      	LDI  R30,LOW(85)
+00006c d002      	RCALL SUBOPT_0x0
+                 ; 0000 0060 delay_ms(100);
                  ; 0000 0061 }
-000084 cffb      	RJMP _0x4
+00006d cffb      	RJMP _0x4
                  ; 0000 0062 }
                  _0x7:
-000085 cfff      	RJMP _0x7
+00006e cfff      	RJMP _0x7
                  ; .FEND
                  
                  	.CSEG
                  ;OPTIMIZER ADDED SUBROUTINE, CALLED 2 TIMES, CODE SIZE REDUCTION:1 WORDS
                  SUBOPT_0x0:
-000086 93e0 0081 	STS  129,R30
-000088 91e0 0081 	LDS  R30,129
-00008a 9508      	RET
-                 
-                 ;OPTIMIZER ADDED SUBROUTINE, CALLED 2 TIMES, CODE SIZE REDUCTION:9 WORDS
-                 SUBOPT_0x1:
-00008b e0e0      	LDI  R30,LOW(0)
-00008c 93e0 0085 	STS  133,R30
-00008e 93e0 0084 	STS  132,R30
-000090 e3ed      	LDI  R30,LOW(61)
-000091 93e0 0089 	STS  137,R30
-000093 e0e9      	LDI  R30,LOW(9)
-000094 93e0 0088 	STS  136,R30
-000096 9508      	RET
-                 
-                 ;OPTIMIZER ADDED SUBROUTINE, CALLED 2 TIMES, CODE SIZE REDUCTION:1 WORDS
-                 SUBOPT_0x2:
-000097 b9e5      	OUT  0x5,R30
-000098 e6a4      	LDI  R26,LOW(100)
-000099 e0b0      	LDI  R27,0
-00009a c000      	RJMP _delay_ms
+00006f b9e5      	OUT  0x5,R30
+000070 e6a4      	LDI  R26,LOW(100)
+000071 e0b0      	LDI  R27,0
+000072 c000      	RJMP _delay_ms
                  
                  ;RUNTIME LIBRARY
                  
                  	.CSEG
                  _delay_ms:
-00009b 9610      	adiw r26,0
-00009c f039      	breq __delay_ms1
+000073 9610      	adiw r26,0
+000074 f039      	breq __delay_ms1
                  __delay_ms0:
-00009d 95a8      	wdr
+000075 95a8      	wdr
                 +
-00009e ea80     +LDI R24 , LOW ( 0xFA0 )
-00009f e09f     +LDI R25 , HIGH ( 0xFA0 )
+000076 ea80     +LDI R24 , LOW ( 0xFA0 )
+000077 e09f     +LDI R25 , HIGH ( 0xFA0 )
                 +__DELAY_USW_LOOP :
-0000a0 9701     +SBIW R24 , 1
-0000a1 f7f1     +BRNE __DELAY_USW_LOOP
+000078 9701     +SBIW R24 , 1
+000079 f7f1     +BRNE __DELAY_USW_LOOP
                  	__DELAY_USW 0xFA0
-0000a2 9711      	sbiw r26,1
-0000a3 f7c9      	brne __delay_ms0
+00007a 9711      	sbiw r26,1
+00007b f7c9      	brne __delay_ms0
                  __delay_ms1:
-0000a4 9508      	ret
+00007c 9508      	ret
                  
                  ;END OF CODE MARKER
                  __END_OF_CODE:
@@ -1720,13 +1682,13 @@ ATmega328P register use summary:
 r0 :   0 r1 :   0 r2 :   0 r3 :   1 r4 :   1 r5 :   0 r6 :   0 r7 :   0 
 r8 :   0 r9 :   0 r10:   0 r11:   0 r12:   0 r13:   0 r14:   0 r15:   0 
 r16:   0 r17:   0 r18:   0 r19:   0 r20:   0 r21:   0 r22:   0 r23:   0 
-r24:   6 r25:   2 r26:   5 r27:   3 r28:   1 r29:   1 r30:  48 r31:   6 
+r24:   6 r25:   2 r26:   5 r27:   3 r28:   1 r29:   1 r30:  29 r31:   6 
 x  :   2 y  :   6 z  :   0 
 Registers used: 12 out of 35 (34.3%)
 
 ATmega328P instruction use summary:
 .lds  :   0 .lds.l:   0 .sts  :   0 .sts.l:   0 adc   :   1 add   :   1 
-adiw  :   1 and   :   0 andi  :   4 asr   :   0 bclr  :   0 bld   :   0 
+adiw  :   1 and   :   0 andi  :   0 asr   :   0 bclr  :   0 bld   :   0 
 brbc  :   0 brbs  :   0 brcc  :   0 brcs  :   0 break :   0 breq  :   1 
 brge  :   0 brhc  :   0 brhs  :   0 brid  :   0 brie  :   0 brlo  :   0 
 brlt  :   0 brmi  :   0 brne  :   4 brpl  :   0 brsh  :   0 brtc  :   0 
@@ -1736,21 +1698,21 @@ clr   :   2 cls   :   0 clt   :   0 clv   :   0 clz   :   0 com   :   0
 cp    :   0 cpc   :   0 cpi   :   0 cpse  :   0 dec   :   1 des   :   0 
 eor   :   0 fmul  :   0 fmuls :   0 fmulsu:   0 icall :   0 ijmp  :   0 
 in    :   1 inc   :   0 jmp   :  27 ld    :   3 ldd   :   0 ldi   :  23 
-lds   :   6 lpm   :   0 lsl   :   0 lsr   :   0 mov   :   0 movw  :   0 
+lds   :   0 lpm   :   0 lsl   :   0 lsr   :   0 mov   :   0 movw  :   0 
 mul   :   0 muls  :   0 mulsu :   0 neg   :   0 nop   :   0 or    :   0 
-ori   :   3 out   :   8 pop   :   0 push  :   0 rcall :   7 ret   :   4 
+ori   :   0 out   :   8 pop   :   0 push  :   0 rcall :   2 ret   :   1 
 reti  :   1 rjmp  :   3 rol   :   0 ror   :   0 sbc   :   0 sbci  :   0 
 sbi   :   0 sbic  :   0 sbis  :   0 sbiw  :   3 sbr   :   0 sbrc  :   0 
-sbrs  :   0 sec   :   0 seh   :   0 sei   :   1 sen   :   0 ser   :   0 
+sbrs  :   0 sec   :   0 seh   :   0 sei   :   0 sen   :   0 ser   :   0 
 ses   :   0 set   :   0 sev   :   0 sez   :   0 sleep :   0 spm   :   0 
-st    :   5 std   :   0 sts   :  10 sub   :   0 subi  :   0 swap  :   0 
+st    :   5 std   :   0 sts   :   4 sub   :   0 subi  :   0 swap  :   0 
 tst   :   0 wdr   :   1 
-Instructions used: 25 out of 116 (21.6%)
+Instructions used: 21 out of 116 (18.1%)
 
 ATmega328P memory use summary [bytes]:
 Segment   Begin    End      Code   Data   Used    Size   Use%
 ---------------------------------------------------------------
-[.cseg] 0x000000 0x00014a    330      0    330   32768   1.0%
+[.cseg] 0x000000 0x0000fa    250      0    250   32768   0.8%
 [.dseg] 0x000100 0x000300      0      0      0    2048   0.0%
 [.eseg] 0x000000 0x000000      0      0      0    1024   0.0%
 

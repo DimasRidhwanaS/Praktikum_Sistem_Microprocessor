@@ -1,5 +1,5 @@
 
-;CodeVisionAVR C Compiler V4.02 Evaluation
+;CodeVisionAVR C Compiler V4.02 
 ;(C) Copyright 1998-2024 Pavel Haiduc, HP InfoTech S.R.L.
 ;http://www.hpinfotech.ro
 
@@ -1418,8 +1418,8 @@ __DELAY_USW_LOOP:
 	.ENDM
 
 ;NAME DEFINITIONS FOR GLOBAL VARIABLES ALLOCATED TO REGISTERS
-	.DEF _i=R3
-	.DEF _i_msb=R4
+	.DEF _value=R3
+	.DEF _value_msb=R4
 
 ;GPIOR0 INITIALIZATION VALUE
 	.EQU __GPIOR0_INIT=0x00
@@ -1458,6 +1458,21 @@ __START_OF_CODE:
 	JMP  0x00
 	JMP  0x00
 
+;GLOBAL REGISTER VARIABLES INITIALIZATION
+__REG_VARS:
+	.DB  0x0,0x0
+
+
+__GLOBAL_INI_TBL:
+	.DW  0x02
+	.DW  0x03
+	.DW  __REG_VARS*2
+
+_0xFFFFFFFF:
+	.DW  0
+
+#define __GLOBAL_INI_TBL_PRESENT 1
+
 __RESET:
 	CLI
 
@@ -1488,6 +1503,29 @@ __CLEAR_SRAM:
 	ST   X+,R30
 	SBIW R24,1
 	BRNE __CLEAR_SRAM
+
+;GLOBAL VARIABLES INITIALIZATION
+	LDI  R30,LOW(__GLOBAL_INI_TBL*2)
+	LDI  R31,HIGH(__GLOBAL_INI_TBL*2)
+__GLOBAL_INI_NEXT:
+	LPM  R24,Z+
+	LPM  R25,Z+
+	SBIW R24,0
+	BREQ __GLOBAL_INI_END
+	LPM  R26,Z+
+	LPM  R27,Z+
+	LPM  R0,Z+
+	LPM  R1,Z+
+	MOVW R22,R30
+	MOVW R30,R0
+__GLOBAL_INI_LOOP:
+	LPM  R0,Z+
+	ST   X+,R0
+	SBIW R24,1
+	BRNE __GLOBAL_INI_LOOP
+	MOVW R30,R22
+	RJMP __GLOBAL_INI_NEXT
+__GLOBAL_INI_END:
 
 ;GPIOR0 INITIALIZATION
 	LDI  R30,__GPIOR0_INIT
@@ -1523,65 +1561,50 @@ __CLEAR_SRAM:
 	.EQU __sm_ext_standby=0x0E
 	.SET power_ctrl_reg=smcr
 	#endif
-;void main(void)
-; 0000 0007 {
+;void main(void) {
+; 0000 0029 void main(void) {
 
 	.CSEG
 _main:
 ; .FSTART _main
-; 0000 0008 DDRD |= (1<<DDD4);                    // Using PD4      -> 0b00010000
-	SBI  0xA,4
-; 0000 0009 
-; 0000 000A while (1)
+; 0000 002A DDRD = 0xFF;
+	LDI  R30,LOW(255)
+	OUT  0xA,R30
+; 0000 002B 
+; 0000 002C while (1) {
 _0x3:
-; 0000 000B {
-; 0000 000C PORTD = 0b00000001;
-	LDI  R30,LOW(1)
-	RCALL SUBOPT_0x0
-; 0000 000D delay_ms(100);
-; 0000 000E PORTD = 0b00000010;
-	LDI  R30,LOW(2)
-	RCALL SUBOPT_0x0
-; 0000 000F delay_ms(100);
-; 0000 0010 PORTD = 0b00000100;
-	LDI  R30,LOW(4)
-	RCALL SUBOPT_0x0
-; 0000 0011 delay_ms(100);
-; 0000 0012 PORTD = 0b00001000;
-	LDI  R30,LOW(8)
-	RCALL SUBOPT_0x0
-; 0000 0013 delay_ms(100);
-; 0000 0014 PORTD = 0b00010000;
-	LDI  R30,LOW(16)
-	RCALL SUBOPT_0x0
-; 0000 0015 delay_ms(100);
-; 0000 0016 PORTD = 0b00100000;
-	LDI  R30,LOW(32)
-	RCALL SUBOPT_0x0
-; 0000 0017 delay_ms(100);
-; 0000 0018 PORTD = 0b01000000;
-	LDI  R30,LOW(64)
-	RCALL SUBOPT_0x0
-; 0000 0019 delay_ms(100);
-; 0000 001A PORTD = 0b10000000;
+; 0000 002D if (value == 0b10000000) {
 	LDI  R30,LOW(128)
-	RCALL SUBOPT_0x0
-; 0000 001B delay_ms(100);
-; 0000 001C }
-	RJMP _0x3
-; 0000 001D }
+	LDI  R31,HIGH(128)
+	CP   R30,R3
+	CPC  R31,R4
+	BRNE _0x6
+; 0000 002E PORTD = 0x00;
+	LDI  R30,LOW(0)
+	OUT  0xB,R30
+; 0000 002F } else {
+	RJMP _0x7
 _0x6:
-	RJMP _0x6
+; 0000 0030 value <<= 1;
+	LSL  R3
+	ROL  R4
+; 0000 0031 PORTD = value;
+	OUT  0xB,R3
+; 0000 0032 }
+_0x7:
+; 0000 0033 
+; 0000 0034 delay_ms(1000); // Wait for 1000 milliseconds
+	LDI  R26,LOW(1000)
+	LDI  R27,HIGH(1000)
+	RCALL _delay_ms
+; 0000 0035 }
+	RJMP _0x3
+; 0000 0036 }
+_0x8:
+	RJMP _0x8
 ; .FEND
 
 	.CSEG
-;OPTIMIZER ADDED SUBROUTINE, CALLED 8 TIMES, CODE SIZE REDUCTION:19 WORDS
-SUBOPT_0x0:
-	OUT  0xB,R30
-	LDI  R26,LOW(100)
-	LDI  R27,0
-	RJMP _delay_ms
-
 ;RUNTIME LIBRARY
 
 	.CSEG

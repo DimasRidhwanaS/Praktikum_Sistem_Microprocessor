@@ -1,11 +1,11 @@
 
-AVRASM ver. 2.1.30  D:\Dimas Data\Tugas-Tugas Dimas\OneDrive - Institut Teknologi Bandung\STEI ITB\Semester 6 (EL)\SIsmik\Praktikum\tugas151\Debug\List\tugas151.asm Thu Feb 29 21:08:27 2024
+AVRASM ver. 2.1.30  D:\Dimas Data\Tugas-Tugas Dimas\OneDrive - Institut Teknologi Bandung\STEI ITB\Semester 6 (EL)\Sismik\Praktikum\Modul 1\tugas151\Debug\List\tugas151.asm Mon Mar 04 21:14:01 2024
 
-D:\Dimas Data\Tugas-Tugas Dimas\OneDrive - Institut Teknologi Bandung\STEI ITB\Semester 6 (EL)\SIsmik\Praktikum\tugas151\Debug\List\tugas151.asm(1421): warning: Register r3 already defined by the .DEF directive
-D:\Dimas Data\Tugas-Tugas Dimas\OneDrive - Institut Teknologi Bandung\STEI ITB\Semester 6 (EL)\SIsmik\Praktikum\tugas151\Debug\List\tugas151.asm(1422): warning: Register r4 already defined by the .DEF directive
+D:\Dimas Data\Tugas-Tugas Dimas\OneDrive - Institut Teknologi Bandung\STEI ITB\Semester 6 (EL)\Sismik\Praktikum\Modul 1\tugas151\Debug\List\tugas151.asm(1421): warning: Register r3 already defined by the .DEF directive
+D:\Dimas Data\Tugas-Tugas Dimas\OneDrive - Institut Teknologi Bandung\STEI ITB\Semester 6 (EL)\Sismik\Praktikum\Modul 1\tugas151\Debug\List\tugas151.asm(1422): warning: Register r4 already defined by the .DEF directive
                  
                  
-                 ;CodeVisionAVR C Compiler V4.02 Evaluation
+                 ;CodeVisionAVR C Compiler V4.02 
                  ;(C) Copyright 1998-2024 Pavel Haiduc, HP InfoTech S.R.L.
                  ;http://www.hpinfotech.ro
                  
@@ -1424,8 +1424,8 @@ D:\Dimas Data\Tugas-Tugas Dimas\OneDrive - Institut Teknologi Bandung\STEI ITB\S
                  	.ENDM
                  
                  ;NAME DEFINITIONS FOR GLOBAL VARIABLES ALLOCATED TO REGISTERS
-                 	.DEF _i=R3
-                 	.DEF _i_msb=R4
+                 	.DEF _value=R3
+                 	.DEF _value_msb=R4
                  
                  ;GPIOR0 INITIALIZATION VALUE
                  	.EQU __GPIOR0_INIT=0x00
@@ -1437,7 +1437,7 @@ D:\Dimas Data\Tugas-Tugas Dimas\OneDrive - Institut Teknologi Bandung\STEI ITB\S
                  __START_OF_CODE:
                  
                  ;INTERRUPT VECTORS
-000000 940c 0034 	JMP  __RESET
+000000 940c 0039 	JMP  __RESET
 000002 940c 0000 	JMP  0x00
 000004 940c 0000 	JMP  0x00
 000006 940c 0000 	JMP  0x00
@@ -1464,52 +1464,90 @@ D:\Dimas Data\Tugas-Tugas Dimas\OneDrive - Institut Teknologi Bandung\STEI ITB\S
 000030 940c 0000 	JMP  0x00
 000032 940c 0000 	JMP  0x00
                  
-                 __RESET:
-000034 94f8      	CLI
+                 ;GLOBAL REGISTER VARIABLES INITIALIZATION
+                 __REG_VARS:
+000034 0000      	.DB  0x0,0x0
                  
-000035 27ee      	CLR  R30
-000036 bbef      	OUT  EECR,R30
+                 
+                 __GLOBAL_INI_TBL:
+000035 0002      	.DW  0x02
+000036 0003      	.DW  0x03
+000037 0068      	.DW  __REG_VARS*2
+                 
+                 _0xFFFFFFFF:
+000038 0000      	.DW  0
+                 
+                 #define __GLOBAL_INI_TBL_PRESENT 1
+                 
+                 __RESET:
+000039 94f8      	CLI
+                 
+00003a 27ee      	CLR  R30
+00003b bbef      	OUT  EECR,R30
                  
                  ;INTERRUPT VECTORS ARE PLACED
                  ;AT THE START OF FLASH
-000037 e0f1      	LDI  R31,1
-000038 bff5      	OUT  MCUCR,R31
-000039 bfe5      	OUT  MCUCR,R30
+00003c e0f1      	LDI  R31,1
+00003d bff5      	OUT  MCUCR,R31
+00003e bfe5      	OUT  MCUCR,R30
                  
                  ;CLEAR R2-R14
-00003a e08d      	LDI  R24,(14-2)+1
-00003b e0a2      	LDI  R26,2
-00003c 27bb      	CLR  R27
+00003f e08d      	LDI  R24,(14-2)+1
+000040 e0a2      	LDI  R26,2
+000041 27bb      	CLR  R27
                  __CLEAR_REG:
-00003d 93ed      	ST   X+,R30
-00003e 958a      	DEC  R24
-00003f f7e9      	BRNE __CLEAR_REG
+000042 93ed      	ST   X+,R30
+000043 958a      	DEC  R24
+000044 f7e9      	BRNE __CLEAR_REG
                  
                  ;CLEAR SRAM
-000040 e080      	LDI  R24,LOW(__CLEAR_SRAM_SIZE)
-000041 e098      	LDI  R25,HIGH(__CLEAR_SRAM_SIZE)
-000042 e0a0      	LDI  R26,LOW(__SRAM_START)
-000043 e0b1      	LDI  R27,HIGH(__SRAM_START)
+000045 e080      	LDI  R24,LOW(__CLEAR_SRAM_SIZE)
+000046 e098      	LDI  R25,HIGH(__CLEAR_SRAM_SIZE)
+000047 e0a0      	LDI  R26,LOW(__SRAM_START)
+000048 e0b1      	LDI  R27,HIGH(__SRAM_START)
                  __CLEAR_SRAM:
-000044 93ed      	ST   X+,R30
-000045 9701      	SBIW R24,1
-000046 f7e9      	BRNE __CLEAR_SRAM
+000049 93ed      	ST   X+,R30
+00004a 9701      	SBIW R24,1
+00004b f7e9      	BRNE __CLEAR_SRAM
+                 
+                 ;GLOBAL VARIABLES INITIALIZATION
+00004c e6ea      	LDI  R30,LOW(__GLOBAL_INI_TBL*2)
+00004d e0f0      	LDI  R31,HIGH(__GLOBAL_INI_TBL*2)
+                 __GLOBAL_INI_NEXT:
+00004e 9185      	LPM  R24,Z+
+00004f 9195      	LPM  R25,Z+
+000050 9700      	SBIW R24,0
+000051 f061      	BREQ __GLOBAL_INI_END
+000052 91a5      	LPM  R26,Z+
+000053 91b5      	LPM  R27,Z+
+000054 9005      	LPM  R0,Z+
+000055 9015      	LPM  R1,Z+
+000056 01bf      	MOVW R22,R30
+000057 01f0      	MOVW R30,R0
+                 __GLOBAL_INI_LOOP:
+000058 9005      	LPM  R0,Z+
+000059 920d      	ST   X+,R0
+00005a 9701      	SBIW R24,1
+00005b f7e1      	BRNE __GLOBAL_INI_LOOP
+00005c 01fb      	MOVW R30,R22
+00005d cff0      	RJMP __GLOBAL_INI_NEXT
+                 __GLOBAL_INI_END:
                  
                  ;GPIOR0 INITIALIZATION
-000047 e0e0      	LDI  R30,__GPIOR0_INIT
-000048 bbee      	OUT  GPIOR0,R30
+00005e e0e0      	LDI  R30,__GPIOR0_INIT
+00005f bbee      	OUT  GPIOR0,R30
                  
                  ;HARDWARE STACK POINTER INITIALIZATION
-000049 efef      	LDI  R30,LOW(__SRAM_END-__HEAP_SIZE)
-00004a bfed      	OUT  SPL,R30
-00004b e0e8      	LDI  R30,HIGH(__SRAM_END-__HEAP_SIZE)
-00004c bfee      	OUT  SPH,R30
+000060 efef      	LDI  R30,LOW(__SRAM_END-__HEAP_SIZE)
+000061 bfed      	OUT  SPL,R30
+000062 e0e8      	LDI  R30,HIGH(__SRAM_END-__HEAP_SIZE)
+000063 bfee      	OUT  SPH,R30
                  
                  ;DATA STACK POINTER INITIALIZATION
-00004d e0c0      	LDI  R28,LOW(__SRAM_START+__DSTACK_SIZE)
-00004e e0d3      	LDI  R29,HIGH(__SRAM_START+__DSTACK_SIZE)
+000064 e0c0      	LDI  R28,LOW(__SRAM_START+__DSTACK_SIZE)
+000065 e0d3      	LDI  R29,HIGH(__SRAM_START+__DSTACK_SIZE)
                  
-00004f 940c 0051 	JMP  _main
+000066 940c 0068 	JMP  _main
                  
                  	.ESEG
                  	.ORG 0x00
@@ -1529,84 +1567,69 @@ D:\Dimas Data\Tugas-Tugas Dimas\OneDrive - Institut Teknologi Bandung\STEI ITB\S
                  	.EQU __sm_ext_standby=0x0E
                  	.SET power_ctrl_reg=smcr
                  	#endif
-                 ;void main(void)
-                 ; 0000 0007 {
+                 ;void main(void) {
+                 ; 0000 0029 void main(void) {
                  
                  	.CSEG
                  _main:
                  ; .FSTART _main
-                 ; 0000 0008 DDRD |= (1<<DDD4);                    // Using PD4      -> 0b00010000
-000051 9a54      	SBI  0xA,4
-                 ; 0000 0009 
-                 ; 0000 000A while (1)
+                 ; 0000 002A DDRD = 0xFF;
+000068 efef      	LDI  R30,LOW(255)
+000069 b9ea      	OUT  0xA,R30
+                 ; 0000 002B 
+                 ; 0000 002C while (1) {
                  _0x3:
-                 ; 0000 000B {
-                 ; 0000 000C PORTD = 0b00000001;
-000052 e0e1      	LDI  R30,LOW(1)
-000053 d010      	RCALL SUBOPT_0x0
-                 ; 0000 000D delay_ms(100);
-                 ; 0000 000E PORTD = 0b00000010;
-000054 e0e2      	LDI  R30,LOW(2)
-000055 d00e      	RCALL SUBOPT_0x0
-                 ; 0000 000F delay_ms(100);
-                 ; 0000 0010 PORTD = 0b00000100;
-000056 e0e4      	LDI  R30,LOW(4)
-000057 d00c      	RCALL SUBOPT_0x0
-                 ; 0000 0011 delay_ms(100);
-                 ; 0000 0012 PORTD = 0b00001000;
-000058 e0e8      	LDI  R30,LOW(8)
-000059 d00a      	RCALL SUBOPT_0x0
-                 ; 0000 0013 delay_ms(100);
-                 ; 0000 0014 PORTD = 0b00010000;
-00005a e1e0      	LDI  R30,LOW(16)
-00005b d008      	RCALL SUBOPT_0x0
-                 ; 0000 0015 delay_ms(100);
-                 ; 0000 0016 PORTD = 0b00100000;
-00005c e2e0      	LDI  R30,LOW(32)
-00005d d006      	RCALL SUBOPT_0x0
-                 ; 0000 0017 delay_ms(100);
-                 ; 0000 0018 PORTD = 0b01000000;
-00005e e4e0      	LDI  R30,LOW(64)
-00005f d004      	RCALL SUBOPT_0x0
-                 ; 0000 0019 delay_ms(100);
-                 ; 0000 001A PORTD = 0b10000000;
-000060 e8e0      	LDI  R30,LOW(128)
-000061 d002      	RCALL SUBOPT_0x0
-                 ; 0000 001B delay_ms(100);
-                 ; 0000 001C }
-000062 cfef      	RJMP _0x3
-                 ; 0000 001D }
+                 ; 0000 002D if (value == 0b10000000) {
+00006a e8e0      	LDI  R30,LOW(128)
+00006b e0f0      	LDI  R31,HIGH(128)
+00006c 15e3      	CP   R30,R3
+00006d 05f4      	CPC  R31,R4
+00006e f419      	BRNE _0x6
+                 ; 0000 002E PORTD = 0x00;
+00006f e0e0      	LDI  R30,LOW(0)
+000070 b9eb      	OUT  0xB,R30
+                 ; 0000 002F } else {
+000071 c003      	RJMP _0x7
                  _0x6:
-000063 cfff      	RJMP _0x6
+                 ; 0000 0030 value <<= 1;
+000072 0c33      	LSL  R3
+000073 1c44      	ROL  R4
+                 ; 0000 0031 PORTD = value;
+000074 b83b      	OUT  0xB,R3
+                 ; 0000 0032 }
+                 _0x7:
+                 ; 0000 0033 
+                 ; 0000 0034 delay_ms(1000); // Wait for 1000 milliseconds
+000075 eea8      	LDI  R26,LOW(1000)
+000076 e0b3      	LDI  R27,HIGH(1000)
+000077 d002      	RCALL _delay_ms
+                 ; 0000 0035 }
+000078 cff1      	RJMP _0x3
+                 ; 0000 0036 }
+                 _0x8:
+000079 cfff      	RJMP _0x8
                  ; .FEND
                  
                  	.CSEG
-                 ;OPTIMIZER ADDED SUBROUTINE, CALLED 8 TIMES, CODE SIZE REDUCTION:19 WORDS
-                 SUBOPT_0x0:
-000064 b9eb      	OUT  0xB,R30
-000065 e6a4      	LDI  R26,LOW(100)
-000066 e0b0      	LDI  R27,0
-000067 c000      	RJMP _delay_ms
-                 
                  ;RUNTIME LIBRARY
                  
                  	.CSEG
                  _delay_ms:
-000068 9610      	adiw r26,0
-000069 f039      	breq __delay_ms1
+00007a 9610      	adiw r26,0
+00007b f039      	breq __delay_ms1
                  __delay_ms0:
-00006a 95a8      	wdr
+00007c 95a8      	wdr
                 +
-00006b ea80     +LDI R24 , LOW ( 0xFA0 )
-00006c e09f     +LDI R25 , HIGH ( 0xFA0 )
+00007d ea80     +LDI R24 , LOW ( 0xFA0 )
+00007e e09f     +LDI R25 , HIGH ( 0xFA0 )
                 +__DELAY_USW_LOOP :
-00006d 9701     +SBIW R24 , 1
-00006e f7f1     +BRNE __DELAY_USW_LOOP
+00007f 9701     +SBIW R24 , 1
+000080 f7f1     +BRNE __DELAY_USW_LOOP
                  	__DELAY_USW 0xFA0
-00006f 9711      	sbiw r26,1
-000070 f7c9      	brne __delay_ms0
+000081 9711      	sbiw r26,1
+000082 f7c9      	brne __delay_ms0
                  __delay_ms1:
-000071 9508      	ret
+000083 9508      	ret
                  
                  ;END OF CODE MARKER
                  __END_OF_CODE:
@@ -1627,40 +1650,40 @@ counted separately from r26..r31 here.
 .dseg memory usage only counts static data declared with .byte
 
 ATmega328P register use summary:
-r0 :   0 r1 :   0 r2 :   0 r3 :   0 r4 :   0 r5 :   0 r6 :   0 r7 :   0 
+r0 :   4 r1 :   1 r2 :   0 r3 :   3 r4 :   2 r5 :   0 r6 :   0 r7 :   0 
 r8 :   0 r9 :   0 r10:   0 r11:   0 r12:   0 r13:   0 r14:   0 r15:   0 
-r16:   0 r17:   0 r18:   0 r19:   0 r20:   0 r21:   0 r22:   0 r23:   0 
-r24:   6 r25:   2 r26:   5 r27:   3 r28:   1 r29:   1 r30:  20 r31:   2 
-x  :   2 y  :   0 z  :   0 
-Registers used: 9 out of 35 (25.7%)
+r16:   0 r17:   0 r18:   0 r19:   0 r20:   0 r21:   0 r22:   2 r23:   0 
+r24:   9 r25:   3 r26:   6 r27:   4 r28:   1 r29:   1 r30:  21 r31:   5 
+x  :   3 y  :   0 z  :   7 
+Registers used: 15 out of 35 (42.9%)
 
 ATmega328P instruction use summary:
 .lds  :   0 .lds.l:   0 .sts  :   0 .sts.l:   0 adc   :   0 add   :   0 
 adiw  :   1 and   :   0 andi  :   0 asr   :   0 bclr  :   0 bld   :   0 
-brbc  :   0 brbs  :   0 brcc  :   0 brcs  :   0 break :   0 breq  :   1 
+brbc  :   0 brbs  :   0 brcc  :   0 brcs  :   0 break :   0 breq  :   2 
 brge  :   0 brhc  :   0 brhs  :   0 brid  :   0 brie  :   0 brlo  :   0 
-brlt  :   0 brmi  :   0 brne  :   4 brpl  :   0 brsh  :   0 brtc  :   0 
+brlt  :   0 brmi  :   0 brne  :   6 brpl  :   0 brsh  :   0 brtc  :   0 
 brts  :   0 brvc  :   0 brvs  :   0 bset  :   0 bst   :   0 call  :   0 
 cbi   :   0 cbr   :   0 clc   :   0 clh   :   0 cli   :   1 cln   :   0 
 clr   :   2 cls   :   0 clt   :   0 clv   :   0 clz   :   0 com   :   0 
-cp    :   0 cpc   :   0 cpi   :   0 cpse  :   0 dec   :   1 des   :   0 
+cp    :   1 cpc   :   1 cpi   :   0 cpse  :   0 dec   :   1 des   :   0 
 eor   :   0 fmul  :   0 fmuls :   0 fmulsu:   0 icall :   0 ijmp  :   0 
-in    :   0 inc   :   0 jmp   :  27 ld    :   0 ldd   :   0 ldi   :  24 
-lds   :   0 lpm   :   0 lsl   :   0 lsr   :   0 mov   :   0 movw  :   0 
+in    :   0 inc   :   0 jmp   :  27 ld    :   0 ldd   :   0 ldi   :  22 
+lds   :   0 lpm   :   7 lsl   :   1 lsr   :   0 mov   :   0 movw  :   3 
 mul   :   0 muls  :   0 mulsu :   0 neg   :   0 nop   :   0 or    :   0 
-ori   :   0 out   :   7 pop   :   0 push  :   0 rcall :   8 ret   :   1 
-reti  :   0 rjmp  :   3 rol   :   0 ror   :   0 sbc   :   0 sbci  :   0 
-sbi   :   1 sbic  :   0 sbis  :   0 sbiw  :   3 sbr   :   0 sbrc  :   0 
+ori   :   0 out   :   9 pop   :   0 push  :   0 rcall :   1 ret   :   1 
+reti  :   0 rjmp  :   4 rol   :   1 ror   :   0 sbc   :   0 sbci  :   0 
+sbi   :   0 sbic  :   0 sbis  :   0 sbiw  :   5 sbr   :   0 sbrc  :   0 
 sbrs  :   0 sec   :   0 seh   :   0 sei   :   0 sen   :   0 ser   :   0 
 ses   :   0 set   :   0 sev   :   0 sez   :   0 sleep :   0 spm   :   0 
-st    :   2 std   :   0 sts   :   0 sub   :   0 subi  :   0 swap  :   0 
+st    :   3 std   :   0 sts   :   0 sub   :   0 subi  :   0 swap  :   0 
 tst   :   0 wdr   :   1 
-Instructions used: 16 out of 116 (13.8%)
+Instructions used: 21 out of 116 (18.1%)
 
 ATmega328P memory use summary [bytes]:
 Segment   Begin    End      Code   Data   Used    Size   Use%
 ---------------------------------------------------------------
-[.cseg] 0x000000 0x0000e4    228      0    228   32768   0.7%
+[.cseg] 0x000000 0x000108    254     10    264   32768   0.8%
 [.dseg] 0x000100 0x000300      0      0      0    2048   0.0%
 [.eseg] 0x000000 0x000000      0      0      0    1024   0.0%
 

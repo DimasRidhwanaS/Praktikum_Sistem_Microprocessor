@@ -1,29 +1,55 @@
+// #include <mega328p.h>
+// #include <delay.h>
+
+
+// void main(void)
+// {
+
+//     int value = 0x01;
+//     DDRD = 0xFF;                    // Using PD4      -> 0b00010000 
+
+//     while (1)
+//       {         
+//         PORTD = value;
+//         delay_ms(100);
+//         PORTD = value;          
+//         delay_ms(100);
+//         PORTD = value;     
+//         delay_ms(100);
+//         PORTD = 0b00001000;     
+//         delay_ms(100);
+//         PORTD = 0b00010000;  
+//         delay_ms(100);
+//         PORTD = 0b00100000;  
+//         delay_ms(100);
+//         PORTD = 0b01000000;  
+//         delay_ms(100);
+//         PORTD = 0b10000000;
+//         delay_ms(100);
+//       }
+// }
+
+
 #include <mega328p.h>
+#include <avr/io.h>
 #include <delay.h>
 
-int i;
 
-void main(void)
-{
-    DDRD |= (1<<DDD4);                    // Using PD4      -> 0b00010000 
 
-while (1)
-      {         
-        PORTD = 0b00000001;
-        delay_ms(100);
-        PORTD = 0b00000010;          
-        delay_ms(100);
-        PORTD = 0b00000100;     
-        delay_ms(100);
-        PORTD = 0b00001000;     
-        delay_ms(100);
-        PORTD = 0b00010000;  
-        delay_ms(100);
-        PORTD = 0b00100000;  
-        delay_ms(100);
-        PORTD = 0b01000000;  
-        delay_ms(100);
-        PORTD = 0b10000000;
-        delay_ms(100);
-      }
+    int value = 0b00000000;   
+
+void main(void) {
+    DDRD = 0xFF;  
+    
+    while (1) {
+        if (value == 0b10000000) {
+            PORTD = 0x00; 
+        } else {
+            value <<= 1;
+            PORTD = value; 
+        }
+
+        delay_ms(1000); // Wait for 1000 milliseconds
+    }
 }
+

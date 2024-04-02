@@ -10,9 +10,6 @@ flag = 1;
 }
 
 - fungsi lanjut kalau flag 1
-
-
-
 =================================================*/
 
 
@@ -31,7 +28,7 @@ dan seterusnya...
 
 
 #include <mega328.h>
-#include <io.h>
+#include <avr/io.h>
 
 void init_timer(void) { 
     //mode operasi CTC, sumber clock prescaler 256 
@@ -57,8 +54,8 @@ void Delay(void) {
     // as Timer1 is a 16-bit timer which is 2^16, the maximum value is 65535, 
     // hence period = 65535-62500 = 3035
     //Set OCR value for 1 Hz 
-    OCR1AH = 0x0B; 
-    OCR1AL = 0xDB; 
+    OCR1AH = 0x7A; 
+    OCR1AL = 0x12; 
 
     //Compare Match TCNT1 dan OCR1A 
     loop_until_bit_is_set(TIFR1,OCF1A); 
